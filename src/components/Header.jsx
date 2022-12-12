@@ -40,7 +40,7 @@ const Header = () => {
         }
     }
     return (
-        <header className='w-screen h-auto p-2 sm:p-6 sm:px-16'>
+        <header className='w-full h-auto p-2 sm:p-6 sm:px-16'>
             {/* desktop and tablet version */}
             <div className="hidden sm:flex w-full h-full justify-between">
                 <Link to={'/'} className="flex items-center gap-2">

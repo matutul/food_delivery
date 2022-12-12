@@ -7,12 +7,12 @@ const App = () => {
     return (
         <AnimatePresence exitBeforeEnter>
 
-            <div className="w-screen h-auto flex flex-col bg-primary">
+            <div className="w-full h-auto flex flex-col bg-primary">
                 <Header />
-                <main className="mt-18 p-8 w-full">
+                <main className="w-full px-4 py-4 md:px-16">
                     <Routes>
                         <Route path="/create_container" element={<CreateContainer />} />
-                        <Route path="/main_container" element={<MainContainer />} />
+                        <Route path="/*" element={<MainContainer />} />
                     </Routes>
                 </main>
             </div>;
