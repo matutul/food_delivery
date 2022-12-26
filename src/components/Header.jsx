@@ -40,7 +40,7 @@ const Header = () => {
         }
     }
     return (
-        <header className='w-full h-auto p-2 sm:p-6 sm:px-16'>
+        <header className='w-full h-auto p-2 sm:p-6 sm:px-16 fixed bg-primary z-50'>
             {/* desktop and tablet version */}
             <div className="hidden sm:flex w-full h-full justify-between">
                 <Link to={'/'} className="flex items-center gap-2">
@@ -71,7 +71,7 @@ const Header = () => {
                                 exit={{ opacity: 0, top: 0 }}
                                 className="absolute right-0 top-12 flex flex-col w-40 rounded-lg shadow-xl bg-white overflow-hidden">
                                 {user && user.email == "ashrafujjamantutul@gmail.com" &&
-                                    <p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out flex items-center gap-3">New Item <MdAddCircleOutline /></p>
+                                    <Link to={"/create_container"}><p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out flex items-center gap-3">New Item <MdAddCircleOutline /></p></Link>
                                 }
                                 <p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out flex items-center gap-3" onClick={logoutHandler}>Log out <MdLogout /></p>
                             </motion.div>
@@ -80,6 +80,8 @@ const Header = () => {
                     </div>
                 </div>
             </div>
+
+
 
             {/* mobile version */}
             <div className="w-full flex justify-between sm:hidden">
@@ -108,7 +110,7 @@ const Header = () => {
                                 className="absolute right-0 top-12 flex flex-col w-40 rounded-lg shadow-xl bg-white overflow-hidden">
 
 
-                                {user && user.email == "ashrafujjamantutul@gmail.com" &&
+                                {user && user.email === "ashrafujjamantutul@gmail.com" &&
                                     <p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out flex items-center gap-3">New Item <MdAddCircleOutline /></p>
                                 }
                                 <p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out">Home</p>
