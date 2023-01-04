@@ -49,10 +49,10 @@ const Header = () => {
                 </Link>
                 <div className="flex items-center gap-8">
                     <ul className="flex items-center h-full gap-8">
-                        <li className="cursor-pointer text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out">Home</li>
-                        <li className="cursor-pointer text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out">Buy</li>
-                        <li className="cursor-pointer text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out">About us</li>
-                        <li className="cursor-pointer text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out">Service</li>
+                        <Link to={'/'} ><li className="cursor-pointer text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out">Home</li></Link>
+                        <Link to={'/'} ><li className="cursor-pointer text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out">Buy</li></Link>
+                        <Link to={'/'} ><li className="cursor-pointer text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out">About us</li></Link>
+                        <Link to={'/'} ><li className="cursor-pointer text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out">Service</li></Link>
                     </ul>
                     <div className="relative group">
                         <MdShoppingBasket className='text-2xl text-textColor cursor-pointer group-hover:text-headingColor duration-100 transition-all ease-in-out' />
@@ -111,12 +111,12 @@ const Header = () => {
 
 
                                 {user && user.email === "ashrafujjamantutul@gmail.com" &&
-                                    <p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out flex items-center gap-3">New Item <MdAddCircleOutline /></p>
+                                    <Link to={"/create_container"}><p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out flex items-center gap-3">New Item <MdAddCircleOutline /></p></Link>
                                 }
-                                <p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out">Home</p>
-                                <p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out">Buy</p>
-                                <p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out">About us</p>
-                                <p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out">Service</p>
+                                <Link to={'/'} ><p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out">Home</p></Link>
+                                <Link to={'/'} ><p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out">Buy</p></Link>
+                                <Link to={'/'} ><p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out">About us</p></Link>
+                                <Link to={'/'} ><p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out">Service</p></Link>
 
                                 <p className="p-1 px-3 cursor-pointer text-base text-textColor hover:text-headingColor hover:bg-gray-50 duration-100 transition-all ease-in-out flex items-center justify-center rounded-md m-2 shadow-md bg-gray-200 gap-3" onClick={logoutHandler}>Log out <MdLogout /></p>
 
