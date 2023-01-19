@@ -1,22 +1,161 @@
+import { doc, setDoc } from 'firebase/firestore';
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { React, useState } from 'react';
 import { MdFastfood, MdCloudUpload, MdFoodBank, MdDelete, MdAttachMoney } from 'react-icons/md';
+import { storage, firestore } from '../firebase.config.js';
 import { categories } from '../utils/categories.js';
 import Loader from './Loader.jsx';
 
 const CreateContainer = () => {
+    // console.log(categories);
     const [title, setTitle] = useState("");
     const [calories, setCalories] = useState("");
     const [price, setPrice] = useState("");
-    const [category, setCategory] = useState(null);
+    const [category, setCategory] = useState("");
     const [imageAsset, setImageAsset] = useState(null);
     const [fields, setFields] = useState(false);
     const [alertStatus, setAlertStatus] = useState("");
     const [msg, setMsg] = useState(null);
     const [isloading, setIsloading] = useState(false);
 
-    const uploadImage = () => { }
-    const deleteImage = () => { }
-    const saveDetails = () => { }
+    const uploadImage = (e) => {
+        setIsloading(true);
+        const imageFile = e.target.files[0];
+        const storageRef = ref(storage, `images/${Date.now()}-${imageFile.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, imageFile);
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case 'paused':
+                        console.log('Upload is paused');
+                        setFields(true);
+                        setMsg('Upload is paused');
+                        setAlertStatus('danger');
+                        setTimeout(() => {
+                            setFields(false);
+                            setMsg(null);
+                            setAlertStatus('');
+                        }, 4000);
+                        break;
+                    case 'running':
+                        console.log('Upload is running');
+                        setFields(true);
+                        setMsg('Upload is running');
+                        setTimeout(() => {
+                            setFields(false);
+                            setMsg(null);
+                        }, 4000);
+                        break;
+                    default:
+                        break;
+                }
+            },
+            (error) => {
+                if (error) {
+                    setIsloading(false);
+                    setFields(true);
+                    setMsg('Something went wrong! Try again later.');
+                    setAlertStatus('danger');
+                    setTimeout(() => {
+                        setFields(false);
+                        setMsg(null);
+                        setAlertStatus('');
+                    }, 4000);
+                }
+            },
+            () => {
+                // Upload completed successfully, now we can get the download URL
+                setFields(true);
+                setMsg('Upload is completed successfully!');
+                setTimeout(() => {
+                    setFields(false);
+                    setMsg(null);
+                }, 4000);
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    if (downloadURL) {
+                        setImageAsset(downloadURL);
+                        setIsloading(false);
+                    }
+                });
+            }
+        );
+    }
+
+    const deleteImage = () => {
+        setIsloading(true);
+        const storageRef = ref(storage, imageAsset);
+        deleteObject(storageRef).then(() => {
+            setImageAsset(null);
+            setIsloading(false);
+            setFields(true);
+            setMsg('The image is deleted successfully.');
+            setAlertStatus('');
+            setTimeout(() => {
+                setFields(false);
+                setMsg(null);
+            }, 4000);
+        }).catch(err => {
+            setIsloading(false);
+            setFields(true);
+            setMsg('Something went wrong! Try again later.');
+            setAlertStatus('danger');
+            setTimeout(() => {
+                setFields(false);
+                setMsg(null);
+                setAlertStatus('');
+            }, 4000);
+        })
+    }
+
+
+    const saveDetails = async () => {
+        console.log(`title: ${title}, calories: ${calories}, price: ${price}, category: ${category}, imageAsset: ${imageAsset}`);
+        try {
+            if (!title || !calories || !price || !category || !imageAsset) {
+                setFields(true);
+                setMsg("Required fields can not be empty!");
+                setAlertStatus('danger');
+                setTimeout(() => {
+                    setFields(false);
+                    setMsg(null);
+                    setAlertStatus('');
+                }, 4000);
+            } else {
+                const newFood = {
+                    id: Date.now(),
+                    title: title,
+                    category: category,
+                    calories: calories,
+                    price: price,
+                    imageUrl: imageAsset
+                }
+                await setDoc(doc(firestore, "FoodItem", `${Date.now()}`), newFood, { merge: true });
+                setFields(true);
+                setMsg("The food is saved successfully!");
+                setTitle("")
+                setCategory("")
+                setCalories("")
+                setPrice("")
+                setImageAsset(null)
+                setAlertStatus('');
+                setTimeout(() => {
+                    setFields(false);
+                    setMsg(null);
+                }, 4000);
+            }
+        } catch (error) {
+            setFields(true);
+            setMsg("Something went wrong! Please try again later.");
+            setAlertStatus('danger');
+            setTimeout(() => {
+                setFields(false);
+                setMsg(null);
+                setAlertStatus('');
+            }, 4000);
+        }
+    }
 
     return (
         <div className="w-full min-h-screen flex flex-col items-center justify-center">
@@ -37,8 +176,8 @@ const CreateContainer = () => {
                     />
                 </div>
                 <div className="w-full">
-                    <select onchange={(e) => setCategory(e.target.value)}
-                        value={category}
+                    <select onChange={(e) => setCategory(e.target.value)}
+                        defaultValue={category}
                         className="w-full text-base outline-none p-2 border-b border-gray-300 rounded-md"
                     >
 
@@ -68,7 +207,7 @@ const CreateContainer = () => {
                                 <>
                                     <div className="relative h-full">
                                         <img src={imageAsset} alt="ProductImage" className="w-full h-full object-cover" />
-                                        <button className="bottom-3 right-3 rounded-full bg-red-600 text-white hover:shadow-lg outline-none" onClick={deleteImage}><MdDelete className="text-white text-xl" />Delete</button>
+                                        <button className="absolute bottom-3 right-3 rounded-full bg-red-500 text-white hover:shadow-lg outline-none w-[50px] h-[50px] flex justify-center items-center hover:scale-125 hover:bg-red-600 transition-all duration-300 ease-in-out" onClick={deleteImage}><MdDelete className="text-white text-4xl" /></button>
                                     </div>
                                 </>
                             }
